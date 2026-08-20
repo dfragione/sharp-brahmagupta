@@ -11,8 +11,8 @@ from typing import Dict, Any, Optional
 APP_VERSION = "1.2.0"
 APP_NAME = "PixShift"
 
-# Fallback URL if git remote is not set
-DEFAULT_VERSION_CHECK_URL = "https://raw.githubusercontent.com/david/PixShift/main/version.json"
+# Default fallback URL for dfragione/sharp-brahmagupta
+DEFAULT_VERSION_CHECK_URL = "https://raw.githubusercontent.com/dfragione/sharp-brahmagupta/main/version.json"
 
 
 def get_current_version() -> str:

@@ -1,0 +1,48 @@
+name: Build & Release QuickJPG
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        run: |
+          python -m unittest discover tests
+
+      - name: Build Standalone Executable
+        run: |
+          python build_exe.py
+
+      - name: Create Release & Upload Asset
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/QuickJPG.exe
+            version.json
+          body_path: version.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -658,6 +658,10 @@ class PixShiftApp(QMainWindow):
         ver_badge.setStyleSheet("background-color: #27282f; color: #60cdff; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; border: 1px solid #363843;")
         header_layout.addWidget(ver_badge)
 
+        engine_badge = QLabel("✨ Multi-Engine")
+        engine_badge.setStyleSheet("background-color: #27282f; color: #4ade80; font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: bold; border: 1px solid #363843;")
+        header_layout.addWidget(engine_badge)
+
         header_layout.addStretch()
 
         self.btn_update = QPushButton("🔄 Check for Updates")

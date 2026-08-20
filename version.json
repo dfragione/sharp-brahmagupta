@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "pub_date": "2026-08-20",
-  "release_notes": "• Renamed app to PixShift Image Converter\n• Added segmented output tabs for JPG, WEBP, and AVIF\n• Preserves alpha transparency for WEBP and AVIF\n• High-performance multi-threading and modern Windows 11 Fluent UI",
+  "release_notes": "• v1.2.0 Update: GitHub Automated Release & Live Auto-Update Verified\n• Enhanced conversion queue stats & real-time feedback\n• Dynamic git remote update resolver\n• Performance optimizations for AVIF & WEBP encoding",
   "download_url": "https://github.com/david/PixShift/releases/latest/download/PixShift.exe"
 }

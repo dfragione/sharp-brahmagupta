@@ -8,16 +8,37 @@ import tempfile
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.2.0"
 APP_NAME = "PixShift"
 
-# GitHub Repo or Raw URL for version manifest
+# Fallback URL if git remote is not set
 DEFAULT_VERSION_CHECK_URL = "https://raw.githubusercontent.com/david/PixShift/main/version.json"
 
 
 def get_current_version() -> str:
     """Returns the current application version."""
     return APP_VERSION
+
+
+def get_update_check_url() -> str:
+    """
+    Dynamically resolves the GitHub raw version URL from git remote origin if available.
+    """
+    try:
+        repo_dir = os.path.dirname(os.path.abspath(__file__))
+        git_dir = os.path.join(repo_dir, ".git")
+        if os.path.exists(git_dir):
+            out = subprocess.check_output(
+                ["git", "remote", "get-url", "origin"],
+                cwd=repo_dir,
+                stderr=subprocess.DEVNULL
+            ).decode().strip()
+            if "github.com" in out:
+                cleaned = out.replace("git@github.com:", "").replace("https://github.com/", "").rstrip(".git")
+                return f"https://raw.githubusercontent.com/{cleaned}/main/version.json"
+    except Exception:
+        pass
+    return DEFAULT_VERSION_CHECK_URL
 
 
 def parse_version_tuple(v_str: str):
@@ -29,14 +50,17 @@ def parse_version_tuple(v_str: str):
         return (0, 0, 0)
 
 
-def check_for_updates(update_url: str = DEFAULT_VERSION_CHECK_URL, timeout: int = 5) -> Dict[str, Any]:
+def check_for_updates(update_url: Optional[str] = None, timeout: int = 5) -> Dict[str, Any]:
     """
     Checks remote URL for the latest version metadata.
     """
+    if not update_url:
+        update_url = get_update_check_url()
+
     try:
         req = urllib.request.Request(
             update_url,
-            headers={"User-Agent": f"QuickJPG-Updater/{APP_VERSION}"}
+            headers={"User-Agent": f"PixShift-Updater/{APP_VERSION}"}
         )
         with urllib.request.urlopen(req, timeout=timeout) as response:
             if response.status == 200:

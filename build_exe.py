@@ -6,7 +6,7 @@ from pathlib import Path
 
 def build_executable():
     print("========================================")
-    print("  Building QuickJPG Standalone .EXE     ")
+    print("  Building PixShift Standalone .EXE     ")
     print("========================================")
     
     icon_path = os.path.abspath("assets/icon.ico")
@@ -14,13 +14,13 @@ def build_executable():
         from generate_icon import generate_app_icon
         generate_app_icon()
 
-    # PyInstaller arguments
+    # PyInstaller arguments (directory build)
     pyinstaller_args = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm",
-        "--onedir",             # Build onedir for fast startup and portable folder, then we can also do onefile
-        "--windowed",           # No console window
-        "--name", "QuickJPG",
+        "--onedir",
+        "--windowed",
+        "--name", "PixShift",
         f"--icon={icon_path}",
         f"--add-data=assets{os.pathsep}assets",
         "--hidden-import", "PyQt6.QtSvg",
@@ -37,13 +37,13 @@ def build_executable():
         print("PyInstaller build failed!")
         sys.exit(1)
 
-    print("\nAlso creating single-file portable executable (QuickJPG-Portable.exe)...")
+    print("\nCreating single-file portable executable (PixShift.exe)...")
     portable_args = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm",
         "--onefile",
         "--windowed",
-        "--name", "QuickJPG",
+        "--name", "PixShift",
         f"--icon={icon_path}",
         f"--add-data=assets{os.pathsep}assets",
         "--hidden-import", "PyQt6.QtSvg",
@@ -53,7 +53,7 @@ def build_executable():
     ]
     subprocess.run(portable_args)
 
-    exe_path = os.path.abspath("dist/QuickJPG.exe")
+    exe_path = os.path.abspath("dist/PixShift.exe")
     if os.path.exists(exe_path):
         size_mb = os.path.getsize(exe_path) / (1024 * 1024)
         print("========================================")
@@ -61,7 +61,7 @@ def build_executable():
         print(f" Output: {exe_path} ({size_mb:.1f} MB)")
         print("========================================")
     else:
-        print("Warning: QuickJPG.exe was not found in dist/")
+        print("Warning: PixShift.exe was not found in dist/")
 
 if __name__ == "__main__":
     build_executable()

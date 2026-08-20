@@ -251,7 +251,7 @@ class UpdateDialog(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("QuickJPG Update Manager")
+        self.setWindowTitle("PixShift Update Manager")
         self.setFixedSize(460, 360)
         self.setStyleSheet(WINDOWS_11_QSS)
 
@@ -339,7 +339,7 @@ class UpdateDialog(QDialog):
             self.action_btn.setVisible(bool(data.get("download_url")))
             self.action_btn.setText(f"Download & Update (v{latest})")
         else:
-            self.title_lbl.setText("QuickJPG is Up to Date")
+            self.title_lbl.setText("PixShift is Up to Date")
             self.status_icon.setText("✅")
             msg = data.get("status_message", f"You are currently running the latest version (v{updater.get_current_version()}).")
             self.status_text.setText(msg)
@@ -614,12 +614,12 @@ class ConversionWorker(QThread):
         self.finished_all.emit(successes, errors)
 
 
-class QuickJPGApp(QMainWindow):
-    """Main Application Window for QuickJPG."""
+class PixShiftApp(QMainWindow):
+    """Main Application Window for PixShift."""
 
     def __init__(self, initial_files: Optional[List[str]] = None):
         super().__init__()
-        self.setWindowTitle("QuickJPG Converter")
+        self.setWindowTitle("PixShift Image Converter")
         self.resize(880, 720)
         self.setMinimumSize(740, 560)
 
@@ -650,7 +650,7 @@ class QuickJPGApp(QMainWindow):
 
         # --- Header Section ---
         header_layout = QHBoxLayout()
-        header_title = QLabel("⚡ QuickJPG Converter")
+        header_title = QLabel("⚡ PixShift")
         header_title.setStyleSheet("font-size: 20px; font-weight: 700; color: #ffffff;")
         header_layout.addWidget(header_title)
 
@@ -1036,3 +1036,8 @@ class QuickJPGApp(QMainWindow):
         msg_box.exec()
         if msg_box.clickedButton() == open_btn:
             self.open_current_output_dir()
+
+
+# Compatibility alias
+QuickJPGApp = PixShiftApp
+

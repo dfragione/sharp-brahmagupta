@@ -9,11 +9,10 @@ from pathlib import Path
 from typing import Dict, Any, Optional
 
 APP_VERSION = "1.1.0"
-APP_NAME = "QuickJPG"
+APP_NAME = "PixShift"
 
 # GitHub Repo or Raw URL for version manifest
-# Users can point this to their GitHub repo or custom URL
-DEFAULT_VERSION_CHECK_URL = "https://raw.githubusercontent.com/david/quickjpg/main/version.json"
+DEFAULT_VERSION_CHECK_URL = "https://raw.githubusercontent.com/david/PixShift/main/version.json"
 
 
 def get_current_version() -> str:
@@ -67,7 +66,7 @@ def check_for_updates(update_url: str = DEFAULT_VERSION_CHECK_URL, timeout: int 
             "latest_version": APP_VERSION,
             "release_notes": "You are currently running the latest build.",
             "is_offline": True,
-            "status_message": f"Up to date! QuickJPG v{APP_VERSION} is the latest release."
+            "status_message": f"Up to date! PixShift v{APP_VERSION} is the latest release."
         }
     except Exception as e:
         return {
@@ -85,8 +84,8 @@ def download_and_install_update(download_url: str, progress_callback=None) -> bo
         return False
 
     try:
-        temp_dir = tempfile.mkdtemp(prefix="quickjpg_update_")
-        target_temp_exe = os.path.join(temp_dir, "QuickJPG_new.exe")
+        temp_dir = tempfile.mkdtemp(prefix="pixshift_update_")
+        target_temp_exe = os.path.join(temp_dir, "PixShift_new.exe")
 
         def reporthook(blocknum, blocksize, totalsize):
             if progress_callback and totalsize > 0:

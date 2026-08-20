@@ -1,4 +1,4 @@
-name: Build & Release QuickJPG
+name: Build & Release PixShift
 
 on:
   push:
@@ -41,7 +41,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/QuickJPG.exe
+            dist/PixShift.exe
             version.json
           body_path: version.json
         env:

@@ -1,12 +1,11 @@
-# Windows 11 Installer for QuickJPG Converter
+# Windows 11 Installer for PixShift Image Converter
 $ErrorActionPreference = "Stop"
 
-$AppName = "QuickJPG Converter"
-$ExeName = "QuickJPG.exe"
+$AppName = "PixShift Image Converter"
+$ExeName = "PixShift.exe"
 $SourceDir = $PSScriptRoot
 $SourceExe = Join-Path $SourceDir "dist\$ExeName"
 
-# Fallback if in dist folder directly
 if (-not (Test-Path $SourceExe)) {
     $SourceExe = Join-Path $SourceDir "$ExeName"
 }
@@ -17,7 +16,7 @@ if (-not (Test-Path $SourceExe)) {
     $SourceExe = Join-Path $SourceDir "dist\$ExeName"
 }
 
-$InstallDir = Join-Path $env:LOCALAPPDATA "Programs\QuickJPG"
+$InstallDir = Join-Path $env:LOCALAPPDATA "Programs\PixShift"
 Write-Host "===============================================" -ForegroundColor Cyan
 Write-Host "   Installing $AppName on Windows 11   " -ForegroundColor Cyan
 Write-Host "===============================================" -ForegroundColor Cyan
@@ -46,7 +45,7 @@ $StartShortcutPath = Join-Path $StartMenuDir "$AppName.lnk"
 $Shortcut = $WshShell.CreateShortcut($StartShortcutPath)
 $Shortcut.TargetPath = $TargetExe
 $Shortcut.WorkingDirectory = $InstallDir
-$Shortcut.Description = "Quick JPG Image Converter for Windows 11"
+$Shortcut.Description = "PixShift Image Converter for Windows 11 (JPG, WEBP, AVIF)"
 $Shortcut.IconLocation = "$TargetExe,0"
 $Shortcut.Save()
 Write-Host "Created Start Menu Shortcut: $StartShortcutPath" -ForegroundColor Green
@@ -57,10 +56,10 @@ $DesktopShortcutPath = Join-Path $DesktopDir "$AppName.lnk"
 $Shortcut = $WshShell.CreateShortcut($DesktopShortcutPath)
 $Shortcut.TargetPath = $TargetExe
 $Shortcut.WorkingDirectory = $InstallDir
-$Shortcut.Description = "Quick JPG Image Converter for Windows 11"
+$Shortcut.Description = "PixShift Image Converter for Windows 11 (JPG, WEBP, AVIF)"
 $Shortcut.IconLocation = "$TargetExe,0"
 $Shortcut.Save()
 Write-Host "Created Desktop Shortcut: $DesktopShortcutPath" -ForegroundColor Green
 
 Write-Host "`nInstallation Completed Successfully!" -ForegroundColor Cyan
-Write-Host "You can now launch QuickJPG directly from your Desktop or Start Menu without Python." -ForegroundColor Cyan
+Write-Host "You can now launch PixShift directly from your Desktop or Start Menu without Python." -ForegroundColor Cyan

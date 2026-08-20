@@ -45,7 +45,7 @@ def generate_app_icon():
         p6 = (int(size * 0.82), int(size * 0.68))
         draw.polygon([p4, p5, p6], fill=(255, 255, 255, 140))
         
-        # Badge at the bottom: "JPG"
+        # Badge at the bottom: "PIX"
         badge_h = max(6, int(size * 0.24))
         badge_y = int(size * 0.64)
         draw.rounded_rectangle(
@@ -64,7 +64,7 @@ def generate_app_icon():
             except Exception:
                 font = ImageFont.load_default()
             
-            text = "JPG"
+            text = "PIX"
             bbox = draw.textbbox((0, 0), text, font=font)
             w = bbox[2] - bbox[0]
             h = bbox[3] - bbox[1]

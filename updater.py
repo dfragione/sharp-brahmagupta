@@ -154,10 +154,16 @@ copy /y "{target_temp_exe}" "{current_exe}"
 start "" "{current_exe}"
 del "%~f0"
 """)
-            subprocess.Popen(
-                ["cmd.exe", "/c", batch_script],
-                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
-            )
+            if sys.platform == "win32":
+                import ctypes
+                # ShellExecuteW delegates process creation to Windows Explorer shell (avoids parent security validation failures)
+                ctypes.windll.shell32.ShellExecuteW(None, "open", batch_script, None, None, 0)
+            else:
+                subprocess.Popen(["sh", batch_script])
+
+            # Give shell execute a moment to register before terminating
+            import time
+            time.sleep(0.5)
             sys.exit(0)
         else:
             return True

@@ -8,7 +8,7 @@ import tempfile
 from pathlib import Path
 from typing import Dict, Any, Optional
 
-APP_VERSION = "1.2.0"
+APP_VERSION = "1.1.0"
 APP_NAME = "PixShift"
 
 # Default fallback URL for dfragione/sharp-brahmagupta
@@ -79,23 +79,33 @@ def check_for_updates(update_url: Optional[str] = None, timeout: int = 5) -> Dic
             else:
                 return {
                     "success": False,
+                    "has_update": False,
                     "error": f"Server returned HTTP {response.status}",
+                    "status_message": f"Server returned HTTP {response.status}",
                     "current_version": APP_VERSION
                 }
-    except urllib.error.URLError:
+    except urllib.error.HTTPError as http_err:
         return {
-            "success": True,
+            "success": False,
             "has_update": False,
-            "current_version": APP_VERSION,
-            "latest_version": APP_VERSION,
-            "release_notes": "You are currently running the latest build.",
-            "is_offline": True,
-            "status_message": f"Up to date! PixShift v{APP_VERSION} is the latest release."
+            "error": f"HTTP {http_err.code}: {http_err.reason}",
+            "status_message": f"Could not check updates: HTTP {http_err.code}",
+            "current_version": APP_VERSION
+        }
+    except urllib.error.URLError as url_err:
+        return {
+            "success": False,
+            "has_update": False,
+            "error": str(url_err.reason),
+            "status_message": f"Offline / Connection error: {url_err.reason}",
+            "current_version": APP_VERSION
         }
     except Exception as e:
         return {
             "success": False,
+            "has_update": False,
             "error": str(e),
+            "status_message": f"Update check error: {e}",
             "current_version": APP_VERSION
         }
 

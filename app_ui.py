@@ -338,6 +338,11 @@ class UpdateDialog(QDialog):
             self.notes_box.setPlainText(f"Release Notes (v{latest}):\n\n{data.get('release_notes', '')}")
             self.action_btn.setVisible(bool(data.get("download_url")))
             self.action_btn.setText(f"Download & Update (v{latest})")
+        elif not data.get("success"):
+            self.title_lbl.setText("Update Check Notice")
+            self.status_icon.setText("⚠️")
+            msg = data.get("status_message") or data.get("error") or "Could not connect to update server."
+            self.status_text.setText(msg)
         else:
             self.title_lbl.setText("PixShift is Up to Date")
             self.status_icon.setText("✅")

@@ -121,12 +121,26 @@ def download_and_install_update(download_url: str, progress_callback=None) -> bo
         temp_dir = tempfile.mkdtemp(prefix="pixshift_update_")
         target_temp_exe = os.path.join(temp_dir, "PixShift_new.exe")
 
-        def reporthook(blocknum, blocksize, totalsize):
-            if progress_callback and totalsize > 0:
-                percent = min(100, int(blocknum * blocksize * 100 / totalsize))
-                progress_callback(percent)
+        req = urllib.request.Request(
+            download_url,
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 PixShift-Updater"}
+        )
 
-        urllib.request.urlretrieve(download_url, target_temp_exe, reporthook=reporthook)
+        with urllib.request.urlopen(req, timeout=30) as response:
+            total_size = int(response.headers.get("content-length", 0))
+            downloaded = 0
+            chunk_size = 65536
+
+            with open(target_temp_exe, "wb") as f_out:
+                while True:
+                    chunk = response.read(chunk_size)
+                    if not chunk:
+                        break
+                    f_out.write(chunk)
+                    downloaded += len(chunk)
+                    if progress_callback and total_size > 0:
+                        pct = min(100, int(downloaded * 100 / total_size))
+                        progress_callback(pct)
 
         current_exe = os.path.abspath(sys.executable if getattr(sys, 'frozen', False) else __file__)
 
@@ -134,12 +148,16 @@ def download_and_install_update(download_url: str, progress_callback=None) -> bo
             batch_script = os.path.join(temp_dir, "update_swap.bat")
             with open(batch_script, "w") as f:
                 f.write(f"""@echo off
-timeout /t 1 /nobreak > nul
+timeout /t 2 /nobreak > nul
+taskkill /F /IM PixShift.exe > nul 2>&1
 copy /y "{target_temp_exe}" "{current_exe}"
 start "" "{current_exe}"
 del "%~f0"
 """)
-            subprocess.Popen(["cmd.exe", "/c", batch_script], creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0)
+            subprocess.Popen(
+                ["cmd.exe", "/c", batch_script],
+                creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
+            )
             sys.exit(0)
         else:
             return True

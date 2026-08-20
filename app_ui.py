@@ -246,6 +246,23 @@ class UpdateCheckThread(QThread):
         self.check_finished.emit(result)
 
 
+class UpdateDownloadThread(QThread):
+    """Worker thread to download the update binary."""
+    progress = pyqtSignal(int)
+    finished = pyqtSignal(bool)
+
+    def __init__(self, download_url: str):
+        super().__init__()
+        self.download_url = download_url
+
+    def run(self):
+        success = updater.download_and_install_update(
+            self.download_url,
+            progress_callback=self.progress.emit
+        )
+        self.finished.emit(success)
+
+
 class UpdateDialog(QDialog):
     """Modern Windows 11 dialog for checking and installing updates."""
 
@@ -320,6 +337,7 @@ class UpdateDialog(QDialog):
         layout.addLayout(btn_layout)
 
         self.update_data: Dict[str, Any] = {}
+        self.download_thread: Optional[UpdateDownloadThread] = None
         self.start_check()
 
     def start_check(self):
@@ -355,17 +373,25 @@ class UpdateDialog(QDialog):
             return
 
         self.action_btn.setEnabled(False)
-        self.status_text.setText("Downloading update...")
+        self.status_text.setText("Downloading update package...")
         self.dl_progress.setVisible(True)
         self.dl_progress.setValue(0)
 
-        def on_prog(pct):
-            self.dl_progress.setValue(pct)
-            QApplication.processEvents()
+        self.download_thread = UpdateDownloadThread(download_url)
+        self.download_thread.progress.connect(self.on_download_progress)
+        self.download_thread.finished.connect(self.on_download_finished)
+        self.download_thread.start()
 
-        success = updater.download_and_install_update(download_url, progress_callback=on_prog)
-        if not success:
-            self.status_text.setText("Update download failed. Please check your internet connection.")
+    def on_download_progress(self, pct: int):
+        self.dl_progress.setValue(pct)
+        self.status_text.setText(f"Downloading update package ({pct}%)...")
+
+    def on_download_finished(self, success: bool):
+        if success:
+            self.status_text.setText("Update downloaded! Restarting PixShift...")
+            self.dl_progress.setValue(100)
+        else:
+            self.status_text.setText("Update download failed. Please check your network or try again.")
             self.action_btn.setEnabled(True)
 
 

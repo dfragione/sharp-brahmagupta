@@ -1,6 +1,6 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "pub_date": "2026-08-20",
-  "release_notes": "• v1.2.0 Update: GitHub Automated Release & Live Auto-Update Verified\n• Enhanced conversion queue stats & real-time feedback\n• Dynamic git remote update resolver\n• Performance optimizations for AVIF & WEBP encoding",
+  "release_notes": "• ✨ v1.3.0 Update: Live GitHub update test successful!\n• New compression optimization engine\n• Improved drag & drop responsiveness",
   "download_url": "https://github.com/dfragione/sharp-brahmagupta/releases/latest/download/PixShift.exe"
 }
